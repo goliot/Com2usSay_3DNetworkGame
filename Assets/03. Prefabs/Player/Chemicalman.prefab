@@ -891,7 +891,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 6f718aaed5863a244af55934ae83e65b, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -938,7 +938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
-  _jumpPower: 10
+  _jumpPower: 15
 --- !u!1 &5839229019790911435
 GameObject:
   m_ObjectHideFlags: 0

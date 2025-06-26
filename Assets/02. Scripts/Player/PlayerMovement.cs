@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _yVelocity = -0.5f;
-
+            _animator.SetTrigger("DoLanding");
             //// Space 키는 여기서도 처리 가능 (더 안정적으로 동작)
             //if (Input.GetKeyDown(KeyCode.Space))
             //{
@@ -76,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (_characterController.isGrounded)
         {
+            _animator.SetTrigger("DoJump");
             _yVelocity = _jumpPower;
         }
     }
