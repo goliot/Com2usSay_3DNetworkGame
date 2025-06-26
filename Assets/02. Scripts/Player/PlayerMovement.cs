@@ -1,4 +1,3 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private float _yVelocity = 0f;
 
     [Header("# Stats")]
+    private PlayerStat _playerStat;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _jumpPower = 10f;
 
@@ -21,9 +21,14 @@ public class PlayerMovement : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
+        _playerStat = GetComponent<PlayerStat>();
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     private void Update()
     {
         GetInput();
@@ -41,21 +46,26 @@ public class PlayerMovement : MonoBehaviour
     private void Movement()
     {
         Vector3 horizontal = new Vector3(_h, 0, _v);
-        //horizontal = Camera.main.transform.TransformDirection(horizontal);
+        horizontal = Camera.main.transform.TransformDirection(horizontal);
         horizontal.y = 0f;
         horizontal.Normalize();
 
-        Vector3 move = horizontal * _speed;
+        Vector3 camForward = Camera.main.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+
+        if (camForward.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(camForward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 15f);
+        }
+
+        Vector3 move = horizontal * _playerStat.GetStat(EStatType.MoveSpeed);
 
         if (_characterController.isGrounded)
         {
             _yVelocity = -0.5f;
             _animator.SetTrigger("DoLanding");
-            //// Space 키는 여기서도 처리 가능 (더 안정적으로 동작)
-            //if (Input.GetKeyDown(KeyCode.Space))
-            //{
-            //    _yVelocity = _jumpPower;
-            //}
         }
         else
         {
@@ -63,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         move.y = _yVelocity;
-
         _characterController.Move(move * Time.deltaTime);
     }
 
@@ -77,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _animator.SetTrigger("DoJump");
-            _yVelocity = _jumpPower;
+            _yVelocity = _playerStat.GetStat(EStatType.JumpPower);
         }
     }
 
