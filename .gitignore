@@ -88,3 +88,4 @@ crashlytics-build.properties
 .idea/*
 
 Assets/02. Scripts/ApiKeys
+Assets/Photon/PhotonUnityNetworking/Resources/PhotonServerSettings.asset
