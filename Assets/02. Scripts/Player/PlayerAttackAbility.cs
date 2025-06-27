@@ -13,6 +13,8 @@ public class PlayerAttackAbility : PlayerAbility
     [Header("# Bullet")]
     [SerializeField] private Transform _muzzle;
 
+    public bool IsAttacking { get; private set; }
+
     private float _timer = 0f;
 
     protected override void Awake()
@@ -35,10 +37,9 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void GetInput()
     {
-        bool isAttacking = Input.GetMouseButton(0);
-        _anim.SetLayerWeight(1, isAttacking ? 1 : 0);
-        _anim.SetBool("IsAttacking", isAttacking);
-        if(isAttacking)
+        IsAttacking = Input.GetMouseButton(0);
+        _anim.SetLayerWeight(1, IsAttacking ? 1 : 0);
+        if(IsAttacking)
         {
             Attack();
         }
@@ -46,11 +47,11 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void Attack()
     {
-        if(_timer < _player.GetStat(EStatType.CoolTime))
+        if(_timer < _player.GetStat(EStatType.CoolTime) || !_player.TryUseStamina(_player.GetStat(EStatType.AttackStaminaUseRate)))
         {
             return;
         }
-
+        _anim.SetTrigger("DoAttack");
         GameObject bullet = PhotonNetwork.Instantiate("PlayerBullet", _muzzle.position, Quaternion.identity);
         bullet.GetComponent<PlayerBullet>().SetDamage(_player.MakeDamage(), _muzzle.forward);
 

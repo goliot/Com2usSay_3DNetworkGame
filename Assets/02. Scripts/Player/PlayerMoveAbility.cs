@@ -2,12 +2,14 @@ using Photon.Pun;
 using Unity.Cinemachine;
 using UnityEngine;
 
-public class PlayerMoveAbility : PlayerAbility, IPunObservable
+public class PlayerMoveAbility : PlayerAbility//, IPunObservable
 {
     private readonly float GRAVITY = -20f;
     private float _yVelocity = 0f;
     [Header("# CameraFollow")]
     [SerializeField] private Transform _cameraRoot;
+    [SerializeField] private GameObject _minimapMarker;
+    [SerializeField] private GameObject _minimapMarkerEnemy;
 
     [Header("# Component")]
     private CharacterController _characterController;
@@ -15,10 +17,13 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
 
     private float _v;
     private float _h;
+    public bool IsSprinting { get; private set; }
+    public bool IsJumping { get; private set; }
     private bool _wasGrounded = true;
+    private float _currentSpeed;
 
-    private Vector3 _receivedPosition = Vector3.zero;
-    private Quaternion _receivedRotation = Quaternion.identity;
+    /*private Vector3 _receivedPosition = Vector3.zero;
+    private Quaternion _receivedRotation = Quaternion.identity;*/
 
     protected override void Awake()
     {
@@ -31,14 +36,24 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     {
         Cursor.lockState = CursorLockMode.Locked;
 
-        if(_photonView.IsMine)
+        if (_photonView.IsMine)
         {
             CinemachineCamera camera = GameObject.FindGameObjectWithTag("FollowCamera").GetComponent<CinemachineCamera>();
             camera.Follow = _cameraRoot;
+
+            MinimapCamera minimapCamera = FindAnyObjectByType<MinimapCamera>();
+            minimapCamera.SetTarget(transform);
+            _minimapMarker.SetActive(true);
+            _minimapMarkerEnemy.SetActive(false);
+        }
+        else
+        {
+            _minimapMarker.SetActive(false);
+            _minimapMarkerEnemy.SetActive(true);
         }
     }
 
-    // 데이터 동기화를 위한 데이터 전송 및 수신 기능
+    /*// 데이터 동기화를 위한 데이터 전송 및 수신 기능
     // stream : 서버에서 주고 받을 데이터가 담긴 변수
     // info : 송수신 성공/실패 여부 로그
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -55,20 +70,18 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
             _receivedPosition = (Vector3)stream.ReceiveNext();
             _receivedRotation = (Quaternion)stream.ReceiveNext();
         }
-    }
+    }*/
 
     private void Update()
     {
         if (!_photonView.IsMine)
         {
-            transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * 20f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * 20f);
+            /*transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * 20f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * 20f);*/
             return;
         }
 
         GetInput();
-        //Jump();
-
         Movement();
         SetAnimation();
     }
@@ -77,6 +90,7 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     {
         _v = Input.GetAxisRaw("Vertical");
         _h = Input.GetAxisRaw("Horizontal");
+        SetSpeed(Input.GetKey(KeyCode.LeftShift));
     }
 
     private void Movement()
@@ -96,11 +110,11 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 15f);
         }
 
-         Vector3 move = horizontal * _player.GetStat(EStatType.MoveSpeed);
+        Vector3 move = horizontal * _currentSpeed;
 
         if (_characterController.isGrounded)
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 Jump();
             }
@@ -117,22 +131,40 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
 
         if (isGroundedNow && !_wasGrounded)
         {
-            _yVelocity = -0.5f; // ← 착지 안정화
+            _yVelocity = -0.5f;
             _animator.SetTrigger("DoLanding");
+            IsJumping = false;
         }
 
         _wasGrounded = isGroundedNow;
     }
 
+    private void SetSpeed(bool isPressingSprint)
+    {
+        if (!isPressingSprint)
+        {
+            IsSprinting = false;
+            _currentSpeed = _player.GetStat(EStatType.MoveSpeed);
+            return;
+        }
+
+        if (_player.TryUseStamina(_player.GetStat(EStatType.SprintStaminaUseRate) * Time.deltaTime))
+        {
+            IsSprinting = true;
+            _currentSpeed = _player.GetStat(EStatType.SprintSpeed);
+        }
+        else
+        {
+            IsSprinting = false;
+            _currentSpeed = _player.GetStat(EStatType.MoveSpeed);
+        }
+    }
+
     private void Jump()
     {
-        /*if (!Input.GetKeyDown(KeyCode.Space))
+        if(_player.TryUseStamina(_player.GetStat(EStatType.JumpStaminaUseRate)))
         {
-            return;
-        }*/
-
-        if (_characterController.isGrounded)
-        {
+            IsJumping = true;
             _animator.SetTrigger("DoJump");
             _yVelocity = _player.GetStat(EStatType.JumpPower);
         }
@@ -142,6 +174,7 @@ public class PlayerMoveAbility : PlayerAbility, IPunObservable
     {
         _animator.SetFloat("Horizontal", _h);
         _animator.SetFloat("Vertical", _v);
+        _animator.SetBool("IsSprinting", IsSprinting);
         _animator.SetBool("IsMoving", !(Mathf.Approximately(0, _h) && Mathf.Approximately(0, _v)));
     }
 }
