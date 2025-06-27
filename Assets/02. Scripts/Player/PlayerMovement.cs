@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     private float _yVelocity = 0f;
 
     [Header("# Stats")]
-    private PlayerStat _playerStat;
+    private PlayerStatHolder _playerStat;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _jumpPower = 10f;
 
@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-        _playerStat = GetComponent<PlayerStat>();
+        _playerStat = GetComponent<PlayerStatHolder>();
     }
 
     private void Start()

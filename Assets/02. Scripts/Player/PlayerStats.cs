@@ -1,12 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Damage
-{
-    public GameObject Owner;
-    public float Value;
-}
-
 [System.Serializable]
 public class PlayerStats
 {

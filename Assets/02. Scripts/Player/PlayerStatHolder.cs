@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerStat : MonoBehaviour
+public class PlayerStatHolder : MonoBehaviour
 {
     [Header("Base Stats (for Inspector only)")]
     public float BaseMoveSpeed = 5f;

@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [Header("# Stats")]
-    private PlayerStat _playerStat;
+    private PlayerStatHolder _playerStat;
     [SerializeField] private float _coolTime;
     [SerializeField] private float _damage;
 
@@ -15,7 +15,7 @@ public class PlayerAttack : MonoBehaviour
     private void Awake()
     {
         _anim = GetComponent<Animator>();
-        _playerStat = GetComponent<PlayerStat>();
+        _playerStat = GetComponent<PlayerStatHolder>();
     }
 
     private void Update()
