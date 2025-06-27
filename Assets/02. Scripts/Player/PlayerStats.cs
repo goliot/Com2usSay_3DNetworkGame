@@ -6,8 +6,6 @@ public class PlayerStats
 {
     private Dictionary<EStatType, float> _stats = new Dictionary<EStatType, float>();
 
-    public GameObject Owner { get; set; }
-
     public float this[EStatType type]
     {
         get => _stats.ContainsKey(type) ? _stats[type] : 0f;

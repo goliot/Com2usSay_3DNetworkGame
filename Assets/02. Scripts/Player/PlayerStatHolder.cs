@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Photon.Pun;
 
-public class PlayerStatHolder : MonoBehaviour
+public class PlayerStatHolder : MonoBehaviour, IDamageable
 {
     [Header("Base Stats (for Inspector only)")] // -> 나중에 DB 생기면 그거 기반으로 바꿀거임
     public float BaseMoveSpeed = 5f;
@@ -10,6 +11,9 @@ public class PlayerStatHolder : MonoBehaviour
     public float BaseAttackDamage = 10f;
     public float BaseMaxHealth = 100f;
     public float BaseJumpPower = 15f;
+    public float BaseMaxStamina = 100f;
+
+    private float _currentHealth;
 
     private PlayerStats _runtimeStats;
     public PlayerStats Stats => _runtimeStats;
@@ -26,9 +30,10 @@ public class PlayerStatHolder : MonoBehaviour
             { EStatType.CoolTime, BaseCoolTime },
             { EStatType.AttackDamage, BaseAttackDamage },
             { EStatType.MaxHealth, BaseMaxHealth },
-            { EStatType.JumpPower, BaseJumpPower }
+            { EStatType.JumpPower, BaseJumpPower },
+            { EStatType.MaxStamnina, BaseMaxStamina },
         });
-        _runtimeStats.Owner = gameObject;
+        _currentHealth = GetStat(EStatType.MaxHealth);
     }
 
     public void ModifyStat(EStatType stat, float delta)
@@ -39,6 +44,15 @@ public class PlayerStatHolder : MonoBehaviour
     public float GetStat(EStatType stat)
     {
         return _runtimeStats[stat];
+    }
+
+    public Damage MakeDamage()
+    {
+        return new Damage
+        {
+            Owner = gameObject,
+            Value = Stats[EStatType.AttackDamage]
+        };
     }
 
     public T GetAbility<T>() where T : PlayerAbility
@@ -60,5 +74,20 @@ public class PlayerStatHolder : MonoBehaviour
         }
 
         throw new Exception($"어빌리티 {type.Name}을 {gameObject.name}에서 찾을 수 없습니다.");
+    }
+
+    public void TakeDamage(Damage damage)
+    {
+        _currentHealth -= damage.Value;
+
+        if(_currentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        PhotonNetwork.Destroy(gameObject);
     }
 }

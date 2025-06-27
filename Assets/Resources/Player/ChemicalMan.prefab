@@ -863,6 +863,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6017757171985724974}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5262948901760638035
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6003365369255999414}
+  m_Layer: 0
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6003365369255999414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5262948901760638035}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.243, y: 0.612, z: 0.779}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8233303435052865395}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5580116483255705963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,6 +1104,7 @@ Transform:
   - {fileID: 4651751552522171950}
   - {fileID: 458280150619659498}
   - {fileID: 8264222544744590217}
+  - {fileID: 6003365369255999414}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7017794232601844900
@@ -1137,10 +1169,11 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 3
+  Synchronization: 1
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 2259858501871136678}
   - {fileID: 6014091670021634585}
   - {fileID: 5221658580372726057}
   sceneViewId: 0
@@ -1159,7 +1192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BaseMoveSpeed: 5
-  BaseCoolTime: 1
+  BaseCoolTime: 0.6
   BaseAttackDamage: 10
   BaseMaxHealth: 100
   BaseJumpPower: 15
@@ -1190,6 +1223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coolTime: 0.6
   _damage: 10
+  _muzzle: {fileID: 6003365369255999414}
 --- !u!114 &1764481173192895655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,7 +1244,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5810746943603028518}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
@@ -1226,7 +1260,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5810746943603028518}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
