@@ -8,13 +8,18 @@ public class PlayerRotationAbility : PlayerAbility
     private float _mx;
     private float _my;
 
-    private void Start()
+    protected override void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+        base.Awake();
+    } 
 
     private void Update()
     {
+        if(!_photonView.IsMine)
+        {
+            return;
+        }
+
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 

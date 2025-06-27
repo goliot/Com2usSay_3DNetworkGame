@@ -13,11 +13,17 @@ public class PlayerAttackAbility : PlayerAbility
 
     protected override void Awake()
     {
+        base.Awake();
         _anim = GetComponent<Animator>();
     }
 
     private void Update()
     {
+        if (!_photonView.IsMine)
+        {
+            return;
+        }
+
         _timer += Time.deltaTime;
 
         GetInput();
@@ -36,7 +42,7 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void Attack()
     {
-        if(_timer < _player.GetStat(EStatType.AttackDamage))
+        if(_timer < _player.GetStat(EStatType.CoolTime))
         {
             return;
         }

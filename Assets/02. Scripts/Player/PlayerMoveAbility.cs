@@ -1,13 +1,13 @@
+using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class PlayerMoveAbility : PlayerAbility
 {
     private readonly float GRAVITY = -20f;
     private float _yVelocity = 0f;
-
-    [Header("# Stats")]
-    [SerializeField] private float _speed = 5f;
-    [SerializeField] private float _jumpPower = 10f;
+    [Header("# CameraFollow")]
+    [SerializeField] private Transform _cameraRoot;
 
     [Header("# Component")]
     private CharacterController _characterController;
@@ -26,10 +26,21 @@ public class PlayerMoveAbility : PlayerAbility
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        if(_photonView.IsMine)
+        {
+            CinemachineCamera camera = GameObject.FindGameObjectWithTag("FollowCamera").GetComponent<CinemachineCamera>();
+            camera.Follow = _cameraRoot;
+        }
     }
 
     private void Update()
     {
+        if (!_photonView.IsMine)
+        {
+            return;
+        }
+
         GetInput();
         Movement();
         Jump();
