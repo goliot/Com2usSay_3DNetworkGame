@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class PhotonServerManager : MonoBehaviourPunCallbacks
 {
     private readonly string _gameVersion = "1.0.0";
-    private readonly string _nickname = "goliot";
+    private readonly string _nickname = $"goliot";
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
             Debug.Log(pair.Value.UserId); // 친구 기능, 귓속말 등에 쓰임
         }
 
-        PhotonNetwork.Instantiate("ChemicalMan", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player/ChemicalMan", Vector3.zero, Quaternion.identity);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
