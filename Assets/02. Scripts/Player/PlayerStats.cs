@@ -14,6 +14,11 @@ public class PlayerStats
         set => _stats[type] = value;
     }
 
+
+    /// <summary>
+    /// 서버에서 처음 받아오는 Base Stat
+    /// </summary>
+    /// <param name="baseStats"></param>
     public void SetBaseStats(Dictionary<EStatType, float> baseStats)
     {
         _stats = new Dictionary<EStatType, float>(baseStats);

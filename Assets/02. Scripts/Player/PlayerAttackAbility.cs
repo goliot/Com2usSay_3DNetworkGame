@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttackAbility : PlayerAbility
 {
     [Header("# Stats")]
-    private PlayerStatHolder _playerStat;
     [SerializeField] private float _coolTime;
     [SerializeField] private float _damage;
 
@@ -12,10 +11,9 @@ public class PlayerAttack : MonoBehaviour
 
     private float _timer = 0f;
 
-    private void Awake()
+    protected override void Awake()
     {
         _anim = GetComponent<Animator>();
-        _playerStat = GetComponent<PlayerStatHolder>();
     }
 
     private void Update()
@@ -38,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
-        if(_timer < _playerStat.GetStat(EStatType.AttackDamage))
+        if(_timer < _player.GetStat(EStatType.AttackDamage))
         {
             return;
         }

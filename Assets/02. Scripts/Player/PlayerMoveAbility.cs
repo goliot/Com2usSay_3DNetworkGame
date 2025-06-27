@@ -1,12 +1,11 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMoveAbility : PlayerAbility
 {
     private readonly float GRAVITY = -20f;
     private float _yVelocity = 0f;
 
     [Header("# Stats")]
-    private PlayerStatHolder _playerStat;
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _jumpPower = 10f;
 
@@ -17,11 +16,11 @@ public class PlayerMovement : MonoBehaviour
     private float _v;
     private float _h;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _characterController = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-        _playerStat = GetComponent<PlayerStatHolder>();
     }
 
     private void Start()
@@ -60,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 15f);
         }
 
-        Vector3 move = horizontal * _playerStat.GetStat(EStatType.MoveSpeed);
+        Vector3 move = horizontal * _player.GetStat(EStatType.MoveSpeed);
 
         if (_characterController.isGrounded)
         {
@@ -86,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         if (_characterController.isGrounded)
         {
             _animator.SetTrigger("DoJump");
-            _yVelocity = _playerStat.GetStat(EStatType.JumpPower);
+            _yVelocity = _player.GetStat(EStatType.JumpPower);
         }
     }
 

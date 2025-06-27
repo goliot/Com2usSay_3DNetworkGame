@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerRotation : MonoBehaviour
+public class PlayerRotationAbility : PlayerAbility
 {
     [SerializeField] private Transform _cameraRoot;
     [SerializeField] private float _rotationSpeed = 10f;
