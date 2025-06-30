@@ -1640,6 +1640,7 @@ MonoBehaviour:
   BaseAttackStaminaCost: 10
   _staminaSlider: {fileID: 3727284754127663278, guid: ed26a2c9c14fb2a44a6997c1224d7423, type: 3}
   _hpSlider: {fileID: 3727284754127663278, guid: 1ff0388390fbf0140bbd1842f8bf645d, type: 3}
+  _root: {fileID: 2973789436188576878}
 --- !u!114 &2259858501871136678
 MonoBehaviour:
   m_ObjectHideFlags: 0

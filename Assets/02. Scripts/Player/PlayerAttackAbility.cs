@@ -40,7 +40,7 @@ public class PlayerAttackAbility : PlayerAbility
     private void GetInput()
     {
         IsAttacking = Input.GetMouseButton(0);
-        _anim.SetLayerWeight(1, IsAttacking ? 1 : 0);
+        //_anim.SetLayerWeight(1, IsAttacking ? 1 : 0);
         if(IsAttacking)
         {
             Attack();

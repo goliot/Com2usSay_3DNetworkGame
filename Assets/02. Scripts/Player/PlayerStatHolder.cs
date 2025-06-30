@@ -4,6 +4,7 @@ using System;
 using Photon.Pun;
 using System.Collections;
 using Unity.Cinemachine;
+using DG.Tweening;
 
 public class PlayerStatHolder : MonoBehaviour, IDamageable
 {
@@ -36,6 +37,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     [SerializeField] private GameObject _hpSlider;
 
     [Header("# Components")]
+    [SerializeField] private GameObject _root;
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new Dictionary<Type, PlayerAbility>();
     private PhotonView _photonView;
     private Animator _anim;
@@ -181,6 +183,8 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         
         CurrentHealth -= damage;
         PlayerHpEvent?.Invoke(CurrentHealth, GetStat(EStatType.MaxHealth));
+        _root.transform.localScale = Vector3.one;
+        _root.transform.DOScale(1.2f * Vector3.one, 0.1f).SetEase(Ease.InOutBounce).OnComplete(() => _root.transform.localScale = Vector3.one);
 
         if(CurrentHealth <= 0f)
         {
@@ -192,12 +196,12 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     [PunRPC]
     private void Die()
     {
-        if(!_photonView.IsMine || IsDead)
+        if (IsDead)
         {
             return;
         }
-        IsDead = true;
         _anim.SetTrigger("DoDie");
+        IsDead = true;
         StartCoroutine(CoDie());
     }
 
@@ -205,12 +209,10 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(5f);
 
-        PhotonServerManager.Instance.Respawn();
-        PhotonNetwork.Destroy(gameObject);
-    }
-
-    public void DestroyObject()
-    {
+        if (_photonView.IsMine)
+        {
+            PhotonServerManager.Instance.Respawn();
+        }
         PhotonNetwork.Destroy(gameObject);
     }
 
