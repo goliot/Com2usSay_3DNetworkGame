@@ -6,7 +6,7 @@ public class PlayerAttackAbility : PlayerAbility
 {
     [Header("# Stats")]
     [SerializeField] private float _coolTime;
-    [SerializeField] private float _damage;
+    public Damage Damage => _player.MakeDamage();
 
     [Header("# Components")]
     private Animator _anim;
@@ -78,5 +78,10 @@ public class PlayerAttackAbility : PlayerAbility
     {
         _weaponCollider.enabled = false;
         Debug.Log("콜라이더 Off");
+    }
+
+    public void HitEnemy(IDamageable damageable)
+    {
+        damageable.TakeDamage(_player.MakeDamage());
     }
 }

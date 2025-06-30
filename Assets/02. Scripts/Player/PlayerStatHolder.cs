@@ -143,10 +143,12 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
 
     public void TakeDamage(Damage damage)
     {
+        Debug.Log($"{gameObject.name} 피격 = {damage.Value}");
         _currentHealth -= damage.Value;
 
         if(_currentHealth <= 0f)
         {
+            _currentHealth = 0f;
             Die();
         }
     }
