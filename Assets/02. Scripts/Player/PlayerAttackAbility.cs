@@ -47,7 +47,7 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void Attack()
     {
-        if(_timer < _player.GetStat(EStatType.CoolTime) || !_player.TryUseStamina(_player.GetStat(EStatType.AttackStaminaUseRate)))
+        if(_timer < _player.GetStat(EStatType.CoolTime) || !_player.TryUseStamina(_player.GetStat(EStatType.AttackStaminaCost)))
         {
             return;
         }

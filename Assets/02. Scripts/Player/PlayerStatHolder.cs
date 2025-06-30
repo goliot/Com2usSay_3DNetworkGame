@@ -16,9 +16,9 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public float BaseJumpPower = 15f;
     public float BaseMaxStamina = 100f;
     public float BaseStaminaRecoveryRate = 20f;
-    public float BaseJumpStaminaUseRate = 10f;
-    public float BaseSprintStaminaUseRate = 10f;
-    public float BaseAttackStaminaUseRate = 10f;
+    public float BaseJumpStaminaCost = 10f;
+    public float BaseSprintStaminaCost = 10f;
+    public float BaseAttackStaminaCost = 10f;
 
     private float _currentHealth;
     private float _currentStamina;
@@ -47,9 +47,9 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
             { EStatType.MaxStamina, BaseMaxStamina },
             { EStatType.SprintSpeed, BaseSprintSpeed },
             { EStatType.StaminaRecoveryRate, BaseStaminaRecoveryRate },
-            { EStatType.SprintStaminaUseRate, BaseSprintStaminaUseRate },
-            { EStatType.JumpStaminaUseRate, BaseJumpStaminaUseRate },
-            { EStatType.AttackStaminaUseRate, BaseAttackStaminaUseRate },
+            { EStatType.SprintStaminaCost, BaseSprintStaminaCost },
+            { EStatType.JumpStaminaCost, BaseJumpStaminaCost },
+            { EStatType.AttackStaminaCost, BaseAttackStaminaCost },
         });
         _currentHealth = GetStat(EStatType.MaxHealth);
         _currentStamina = GetStat(EStatType.MaxStamina);

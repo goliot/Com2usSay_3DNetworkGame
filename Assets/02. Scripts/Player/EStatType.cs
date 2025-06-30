@@ -6,12 +6,10 @@ public enum EStatType
     AttackDamage,
     MaxHealth,
     JumpPower,
-    CriticalChance,
-    Armor,
     MaxStamina,
     StaminaRecoveryRate,
-    JumpStaminaUseRate,
-    SprintStaminaUseRate,
-    AttackStaminaUseRate,
+    JumpStaminaCost,
+    SprintStaminaCost,
+    AttackStaminaCost,
     // 필요 시 확장 가능
 }

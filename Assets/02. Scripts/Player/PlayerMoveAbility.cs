@@ -148,7 +148,7 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
             return;
         }
 
-        if (_player.TryUseStamina(_player.GetStat(EStatType.SprintStaminaUseRate) * Time.deltaTime))
+        if (_player.TryUseStamina(_player.GetStat(EStatType.SprintStaminaCost) * Time.deltaTime))
         {
             IsSprinting = true;
             _currentSpeed = _player.GetStat(EStatType.SprintSpeed);
@@ -162,7 +162,7 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
 
     private void Jump()
     {
-        if(_player.TryUseStamina(_player.GetStat(EStatType.JumpStaminaUseRate)))
+        if(_player.TryUseStamina(_player.GetStat(EStatType.JumpStaminaCost)))
         {
             IsJumping = true;
             _animator.SetTrigger("DoJump");
