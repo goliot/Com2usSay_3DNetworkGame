@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -132,7 +133,8 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
         if (isGroundedNow && !_wasGrounded)
         {
             _yVelocity = -0.5f;
-            _animator.SetTrigger("DoLanding");
+            //_animator.SetTrigger("DoLanding");
+            _photonView.RPC(nameof(PlayLandingAnimation), RpcTarget.All);
             IsJumping = false;
         }
 
@@ -165,7 +167,8 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
         if(_player.TryUseStamina(_player.GetStat(EStatType.JumpStaminaCost)))
         {
             IsJumping = true;
-            _animator.SetTrigger("DoJump");
+            //_animator.SetTrigger("DoJump");
+            _photonView.RPC(nameof(PlayJumpAnimation), RpcTarget.All);
             _yVelocity = _player.GetStat(EStatType.JumpPower);
         }
     }
@@ -176,5 +179,17 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
         _animator.SetFloat("Vertical", _v);
         _animator.SetBool("IsSprinting", IsSprinting);
         _animator.SetBool("IsMoving", !(Mathf.Approximately(0, _h) && Mathf.Approximately(0, _v)));
+    }
+
+    [PunRPC]
+    private void PlayJumpAnimation()
+    {
+        _animator.SetTrigger("DoJump");
+    }
+
+    [PunRPC]
+    private void PlayLandingAnimation()
+    {
+        _animator.SetTrigger("DoLanding");
     }
 }

@@ -51,10 +51,17 @@ public class PlayerAttackAbility : PlayerAbility
         {
             return;
         }
-        _anim.SetTrigger("DoAttack");
+        //_anim.SetTrigger("DoAttack");
+        _photonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All);
         GameObject bullet = PhotonNetwork.Instantiate("PlayerBullet", _muzzle.position, Quaternion.identity);
         bullet.GetComponent<PlayerBullet>().SetDamage(_player.MakeDamage(), _muzzle.forward);
 
         _timer = 0f;
+    }
+
+    [PunRPC]
+    private void PlayAttackAnimation()
+    {
+        _anim.SetTrigger("DoAttack");
     }
 }
