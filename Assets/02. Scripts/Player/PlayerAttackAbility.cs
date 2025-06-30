@@ -86,10 +86,10 @@ public class PlayerAttackAbility : PlayerAbility
         {
             return;
         }
-        //damageable.TakeDamage(_player.MakeDamage());
+
         Damage damage = _player.MakeDamage();
         PhotonView otherPhotonView = other.GetComponent<PhotonView>();
         otherPhotonView.RPC(nameof(PlayerStatHolder.TakeDamage), RpcTarget.AllBuffered, damage.Value, PhotonNetwork.NickName, _photonView.ViewID);
-        //_photonView.RPC("TakeDamage", RpcTarget.All, damageable, _player.MakeDamage());
+        otherPhotonView.RPC(nameof(PlayerStatHolder.SpawnHitEffect), RpcTarget.All, other.ClosestPoint(transform.position));
     }
 }

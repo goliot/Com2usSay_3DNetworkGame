@@ -180,7 +180,6 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         }
         
         CurrentHealth -= damage;
-
         PlayerHpEvent?.Invoke(CurrentHealth, GetStat(EStatType.MaxHealth));
 
         if(CurrentHealth <= 0f)
@@ -218,5 +217,14 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public void TakeFallDeath()
     {
         _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, _photonView.ViewID);
+    }
+
+    [PunRPC]
+    public void SpawnHitEffect(Vector3 position)
+    {
+        Vector3 dir = (position - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(dir);
+
+        Instantiate(Resources.Load<GameObject>("HitEffect"), position, rotation);
     }
 }
