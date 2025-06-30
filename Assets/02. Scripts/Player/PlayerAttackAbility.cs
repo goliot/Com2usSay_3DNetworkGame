@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class PlayerAttackAbility : PlayerAbility
 {
@@ -9,6 +10,7 @@ public class PlayerAttackAbility : PlayerAbility
 
     [Header("# Components")]
     private Animator _anim;
+    [SerializeField] private Collider _weaponCollider;
 
     [Header("# Bullet")]
     [SerializeField] private Transform _muzzle;
@@ -53,8 +55,9 @@ public class PlayerAttackAbility : PlayerAbility
         }
         //_anim.SetTrigger("DoAttack");
         _photonView.RPC(nameof(PlayAttackAnimation), RpcTarget.All);
-        GameObject bullet = PhotonNetwork.Instantiate("PlayerBullet", _muzzle.position, Quaternion.identity);
-        bullet.GetComponent<PlayerBullet>().SetDamage(_player.MakeDamage(), _muzzle.forward);
+
+        //GameObject bullet = PhotonNetwork.Instantiate("PlayerBullet", _muzzle.position, Quaternion.identity);
+        //bullet.GetComponent<PlayerBullet>().SetDamage(_player.MakeDamage(), _muzzle.forward);
 
         _timer = 0f;
     }
@@ -62,6 +65,18 @@ public class PlayerAttackAbility : PlayerAbility
     [PunRPC]
     private void PlayAttackAnimation()
     {
-        _anim.SetTrigger("DoAttack");
+        _anim.SetTrigger("DoMeleeAttack");
+    }
+
+    public void ActiveCollider()
+    {
+        _weaponCollider.enabled = true;
+        Debug.Log("콜라이더 On");
+    }
+
+    public void DeactiveCollider()
+    {
+        _weaponCollider.enabled = false;
+        Debug.Log("콜라이더 Off");
     }
 }
