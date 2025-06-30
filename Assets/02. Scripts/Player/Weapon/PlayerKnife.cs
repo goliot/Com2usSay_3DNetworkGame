@@ -6,7 +6,7 @@ public class PlayerKnife : MonoBehaviour
 
     private void Start()
     {
-        _attackAbility.GetComponentInParent<PlayerAttackAbility>();
+        _attackAbility = GetComponentInParent<PlayerAttackAbility>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -18,7 +18,7 @@ public class PlayerKnife : MonoBehaviour
 
         if(other.TryGetComponent<IDamageable>(out var damageable))
         {
-            _attackAbility.HitEnemy(damageable);
+            _attackAbility.HitEnemy(other);
         }
     }
 }

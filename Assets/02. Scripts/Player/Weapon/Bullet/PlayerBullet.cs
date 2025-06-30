@@ -46,7 +46,7 @@ public class PlayerBullet : MonoBehaviour
 
         if (other.TryGetComponent<IDamageable>(out var damageable))
         {
-            damageable.TakeDamage(_damage);
+            //damageable.TakeDamage(_damage);
         }
 
         PhotonNetwork.Destroy(gameObject);

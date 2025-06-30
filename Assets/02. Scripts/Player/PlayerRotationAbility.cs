@@ -15,7 +15,7 @@ public class PlayerRotationAbility : PlayerAbility
 
     private void Update()
     {
-        if(!_photonView.IsMine)
+        if(!_photonView.IsMine || _player.IsDead)
         {
             return;
         }

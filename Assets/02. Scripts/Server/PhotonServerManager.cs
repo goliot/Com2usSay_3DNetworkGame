@@ -6,11 +6,22 @@ using System.Collections.Generic;
 // 포톤 서버 관리자(서버 연결, 로비 입장, 방 입장, 게임 입장)
 public class PhotonServerManager : MonoBehaviourPunCallbacks
 {
+    public static PhotonServerManager Instance { get; private set; }
+
     private readonly string _gameVersion = "1.0.0";
     private readonly string _nickname = $"goliot";
 
+    [SerializeField] private Transform[] SpawnPoints;    
+
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // 중복 방지
+            return;
+        }
+        Instance = this;
+
         // 0. 데이터 송 수신 빈도 매 초당 30회로 설정 (기본 = 10)
         PhotonNetwork.SendRate = 60; // TargetRate일 뿐 보장은 아님
         PhotonNetwork.SerializationRate = 60;
@@ -71,7 +82,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
             Debug.Log(pair.Value.UserId); // 친구 기능, 귓속말 등에 쓰임
         }
 
-        PhotonNetwork.Instantiate("Player/ChemicalMan", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player/ChemicalMan", SpawnPoints[Random.Range(0, SpawnPoints.Length)].position, Quaternion.identity);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -95,5 +106,10 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log($"룸 생성 실패 : {returnCode} : {message}");
+    }
+
+    public void Respawn()
+    {
+        PhotonNetwork.Instantiate("Player/ChemicalMan", SpawnPoints[Random.Range(0, SpawnPoints.Length)].position, Quaternion.identity);
     }
 }

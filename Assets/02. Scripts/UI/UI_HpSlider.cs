@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_StaminaSlider : MonoBehaviour
+public class UI_HpSlider : MonoBehaviour
 {
     private Slider _slider;
 
@@ -13,7 +13,7 @@ public class UI_StaminaSlider : MonoBehaviour
 
     public void Init(PlayerStatHolder holder)
     {
-        holder.PlayerStaminaEvent += UpdateSlider;
+        holder.PlayerHpEvent += UpdateSlider;
         _slider.value = 1;
     }
 

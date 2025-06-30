@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hp
+  m_text: Stamina
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -182,9 +182,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4855426492461223532}
   - component: {fileID: 586714026718800806}
-  - component: {fileID: -851997341317502618}
+  - component: {fileID: -6277632952413185242}
   m_Layer: 5
-  m_Name: HpSlider
+  m_Name: StaminaSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -209,7 +209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 41.4, y: 107.71}
+  m_AnchoredPosition: {x: 41.4, y: 0}
   m_SizeDelta: {x: 768.3, y: 75}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &586714026718800806
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-851997341317502618
+--- !u!114 &-6277632952413185242
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -272,7 +272,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3727284754127663278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1daa1cbf551922469cda3b6891286b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c1ed3575de0bf84d9b8f006084da690, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &4033088705176756018
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.97141445, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

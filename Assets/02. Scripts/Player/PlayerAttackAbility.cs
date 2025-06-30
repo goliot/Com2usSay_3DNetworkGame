@@ -27,7 +27,7 @@ public class PlayerAttackAbility : PlayerAbility
 
     private void Update()
     {
-        if (!_photonView.IsMine)
+        if (!_photonView.IsMine || _player.IsDead)
         {
             return;
         }
@@ -80,8 +80,16 @@ public class PlayerAttackAbility : PlayerAbility
         Debug.Log("콜라이더 Off");
     }
 
-    public void HitEnemy(IDamageable damageable)
+    public void HitEnemy(Collider other)
     {
-        damageable.TakeDamage(_player.MakeDamage());
+        if (!_photonView.IsMine)
+        {
+            return;
+        }
+        //damageable.TakeDamage(_player.MakeDamage());
+        Damage damage = _player.MakeDamage();
+        PhotonView otherPhotonView = other.GetComponent<PhotonView>();
+        otherPhotonView.RPC(nameof(PlayerStatHolder.TakeDamage), RpcTarget.AllBuffered, damage.Value, PhotonNetwork.NickName, _photonView.ViewID);
+        //_photonView.RPC("TakeDamage", RpcTarget.All, damageable, _player.MakeDamage());
     }
 }

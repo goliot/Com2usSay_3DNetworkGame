@@ -2,10 +2,13 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using Photon.Pun;
+using System.Collections;
+using Unity.Cinemachine;
 
 public class PlayerStatHolder : MonoBehaviour, IDamageable
 {
     public event Action<float, float> PlayerStaminaEvent;
+    public event Action<float, float> PlayerHpEvent;
 
     [Header("Base Stats (for Inspector only)")] // -> 나중에 DB 생기면 그거 기반으로 바꿀거임
     public float BaseMoveSpeed = 5f;
@@ -20,21 +23,28 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public float BaseSprintStaminaCost = 10f;
     public float BaseAttackStaminaCost = 10f;
 
-    private float _currentHealth;
-    private float _currentStamina;
+    [Header("# Status")]
+    public float CurrentHealth { get; private set; }
+    public float CurrentStamina { get; private set; }
+    public bool IsDead { get; private set; }
 
     private PlayerStats _runtimeStats;
     public PlayerStats Stats => _runtimeStats;
 
     [Header("UI")]
     [SerializeField] private GameObject _staminaSlider;
+    [SerializeField] private GameObject _hpSlider;
 
     [Header("# Components")]
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new Dictionary<Type, PlayerAbility>();
     private PhotonView _photonView;
+    private Animator _anim;
+    private CinemachineImpulseSource _source;
 
     private void Awake()
     {
+        _source = GetComponent<CinemachineImpulseSource>();
+        _anim = GetComponent<Animator>();
         _photonView = GetComponent<PhotonView>();
         _runtimeStats = new PlayerStats();
         _runtimeStats.SetBaseStats(new Dictionary<EStatType, float>
@@ -51,13 +61,18 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
             { EStatType.JumpStaminaCost, BaseJumpStaminaCost },
             { EStatType.AttackStaminaCost, BaseAttackStaminaCost },
         });
-        _currentHealth = GetStat(EStatType.MaxHealth);
-        _currentStamina = GetStat(EStatType.MaxStamina);
+        CurrentHealth = GetStat(EStatType.MaxHealth);
+        CurrentStamina = GetStat(EStatType.MaxStamina);
+        IsDead = false;
 
         if(_photonView.IsMine)
         {
-            GameObject staminaSlider = Instantiate(_staminaSlider, GameObject.FindGameObjectWithTag("HUDCanvas").transform);
-            staminaSlider.GetComponent<UI_StaminaSlider>().Init(this);
+            //GameObject staminaSlider = Instantiate(_staminaSlider, GameObject.FindGameObjectWithTag("HUDCanvas").transform);
+            //GameObject hpSlider = Instantiate(_hpSlider, GameObject.FindGameObjectWithTag("HUDCanvas").transform);
+            HUDManager.Instance.HpSlider.Init(this);
+            HUDManager.Instance.StaminaSlider.Init(this);
+            //staminaSlider.GetComponent<UI_StaminaSlider>().Init(this);
+            //hpSlider.GetComponent<UI_HpSlider>().Init(this);
         }
     }
 
@@ -113,12 +128,12 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
 
     public bool TryUseStamina(float value)
     {
-        if(_currentStamina >= value)
+        if(CurrentStamina >= value)
         {
-            _currentStamina -= value;
+            CurrentStamina -= value;
             if (_photonView.IsMine)
             {
-                PlayerStaminaEvent?.Invoke(_currentStamina, GetStat(EStatType.MaxStamina));
+                PlayerStaminaEvent?.Invoke(CurrentStamina, GetStat(EStatType.MaxStamina));
             }
             return true;
         }
@@ -131,30 +146,77 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         PlayerMoveAbility move = GetAbility<PlayerMoveAbility>();
         PlayerAttackAbility attack = GetAbility<PlayerAttackAbility>();
         float maxStamina = GetStat(EStatType.MaxStamina);
-        if(!move.IsSprinting && !move.IsJumping && !attack.IsAttacking && !(Mathf.Approximately(_currentStamina, maxStamina) || (Mathf.Approximately(_currentStamina, 0))))
+        if(!move.IsSprinting && !move.IsJumping && !attack.IsAttacking && !(Mathf.Approximately(CurrentStamina, maxStamina)))
         {
-            _currentStamina = Mathf.Clamp(_currentStamina + 20 * Time.deltaTime, 0, GetStat(EStatType.MaxStamina));
+            CurrentStamina = Mathf.Clamp(CurrentStamina + 20 * Time.deltaTime, 0, GetStat(EStatType.MaxStamina));
             if(_photonView.IsMine)
             {
-                PlayerStaminaEvent?.Invoke(_currentStamina, maxStamina);
+                PlayerStaminaEvent?.Invoke(CurrentStamina, maxStamina);
             }
         }
     }
 
-    public void TakeDamage(Damage damage)
+    [PunRPC]
+    public void TakeDamage(float damage, string attackerNickname, int attackerViewID = default)
     {
-        Debug.Log($"{gameObject.name} 피격 = {damage.Value}");
-        _currentHealth -= damage.Value;
-
-        if(_currentHealth <= 0f)
+        if(IsDead)
         {
-            _currentHealth = 0f;
-            Die();
+            return;
+        }
+
+        if(attackerViewID == default || attackerViewID == _photonView.ViewID)
+        {
+            Debug.Log($"{PhotonNetwork.NickName}이 {nameof(DeadZone)}에 의해 사망했습니다.");
+        }
+        else
+        {
+            GameObject attacker = PhotonView.Find(attackerViewID).gameObject;
+            Debug.Log($"{attackerNickname} ({attacker?.name}) 에게 {damage} 데미지를 받았습니다.");
+        }
+
+        if (_photonView.IsMine)
+        {
+            _source.GenerateImpulse();
+        }
+        
+        CurrentHealth -= damage;
+
+        PlayerHpEvent?.Invoke(CurrentHealth, GetStat(EStatType.MaxHealth));
+
+        if(CurrentHealth <= 0f)
+        {
+            CurrentHealth = 0f;
+            _photonView.RPC(nameof(Die), RpcTarget.All);
         }
     }
 
+    [PunRPC]
     private void Die()
     {
+        if(!_photonView.IsMine || IsDead)
+        {
+            return;
+        }
+        IsDead = true;
+        _anim.SetTrigger("DoDie");
+        StartCoroutine(CoDie());
+    }
+
+    private IEnumerator CoDie()
+    {
+        yield return new WaitForSeconds(5f);
+
+        PhotonServerManager.Instance.Respawn();
         PhotonNetwork.Destroy(gameObject);
+    }
+
+    public void DestroyObject()
+    {
+        PhotonNetwork.Destroy(gameObject);
+    }
+
+    public void TakeFallDeath()
+    {
+        _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, _photonView.ViewID);
     }
 }

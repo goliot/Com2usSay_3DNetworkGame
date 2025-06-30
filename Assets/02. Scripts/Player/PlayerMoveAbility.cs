@@ -75,7 +75,7 @@ public class PlayerMoveAbility : PlayerAbility//, IPunObservable
 
     private void Update()
     {
-        if (!_photonView.IsMine)
+        if (!_photonView.IsMine || _player.IsDead)
         {
             /*transform.position = Vector3.Lerp(transform.position, _receivedPosition, Time.deltaTime * 20f);
             transform.rotation = Quaternion.Slerp(transform.rotation, _receivedRotation, Time.deltaTime * 20f);*/
