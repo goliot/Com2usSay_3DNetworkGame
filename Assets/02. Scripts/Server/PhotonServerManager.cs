@@ -81,8 +81,6 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
             // 진짜 고유 ID
             Debug.Log(pair.Value.UserId); // 친구 기능, 귓속말 등에 쓰임
         }
-
-        PhotonNetwork.Instantiate("Player/ChemicalMan", SpawnPoints[Random.Range(0, SpawnPoints.Length)].position, Quaternion.identity);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
