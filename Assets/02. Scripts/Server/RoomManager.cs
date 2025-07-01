@@ -9,6 +9,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public static RoomManager Instance { get; private set; }
 
     public event Action OnRoomDataChanged;
+    public event Action<string> OnPlayerEnter;
+    public event Action<string> OnPlayerLeft;
+    public event Action<string, string> OnPlayerDead;
 
     [Header("# Spawn")]
     [SerializeField] private Transform[] _spawnPoints;
@@ -37,11 +40,20 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         OnRoomDataChanged?.Invoke();
+        OnPlayerEnter?.Invoke($"{newPlayer.NickName}_{newPlayer.ActorNumber}");
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         OnRoomDataChanged?.Invoke();
+        OnPlayerLeft?.Invoke($"{otherPlayer.NickName}_{otherPlayer.ActorNumber}");
+    }
+
+    public void OnPlayerDeath(int deadActorNumber, int attackerActorNumber)
+    {
+        string deadNickname = $"{_room.Players[deadActorNumber].NickName}_{deadActorNumber}";
+        string attackerNickname = $"{_room.Players[attackerActorNumber].NickName}_{attackerActorNumber}";
+        OnPlayerDead?.Invoke(deadNickname, attackerNickname);
     }
 
     private void SetRoom()

@@ -159,22 +159,22 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     }
 
     [PunRPC]
-    public void TakeDamage(float damage, string attackerNickname, int attackerViewID = default)
+    public void TakeDamage(float damage, string attackerNickname, int actorNumber = default)
     {
         if(IsDead)
         {
             return;
         }
 
-        if(attackerViewID == default || attackerViewID == _photonView.ViewID)
-        {
-            Debug.Log($"{PhotonNetwork.NickName}이 {nameof(DeadZone)}에 의해 사망했습니다.");
-        }
-        else
-        {
-            GameObject attacker = PhotonView.Find(attackerViewID).gameObject;
-            Debug.Log($"{attackerNickname} ({attacker?.name}) 에게 {damage} 데미지를 받았습니다.");
-        }
+        //if(actorNumber == default || actorNumber == _photonView.ViewID)
+        //{
+        //    Debug.Log($"{PhotonNetwork.NickName}이 {nameof(DeadZone)}에 의해 사망했습니다.");
+        //}
+        //else
+        //{
+        //    GameObject attacker = PhotonView.Find(actorNumber).gameObject;
+        //    Debug.Log($"{attackerNickname} ({attacker?.name}) 에게 {damage} 데미지를 받았습니다.");
+        //}
 
         if (_photonView.IsMine)
         {
@@ -189,6 +189,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         if(CurrentHealth <= 0f)
         {
             CurrentHealth = 0f;
+            RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
             _photonView.RPC(nameof(Die), RpcTarget.All);
         }
     }
@@ -212,8 +213,8 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         if (_photonView.IsMine)
         {
             PhotonServerManager.Instance.Respawn();
+            PhotonNetwork.Destroy(gameObject);
         }
-        PhotonNetwork.Destroy(gameObject);
     }
 
     public void TakeFallDeath()
