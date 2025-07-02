@@ -15,7 +15,7 @@ public class ItemObject : MonoBehaviour
             if (playerStatHolder != null)
             {
                 UseItem(playerStatHolder);
-                ItemObjectFactory.Instance.RequestDelete(GetComponent<PhotonView>().ViewID);
+                ObjectFactory.Instance.RequestDelete(GetComponent<PhotonView>().ViewID);
             }
         }
     }

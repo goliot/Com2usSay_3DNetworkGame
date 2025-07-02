@@ -1,8 +1,7 @@
-public class BearIdleState : IBearState
+public class BearDeadState : IBearState
 {
     public void Enter(Bear bear)
     {
-        bear.ChangeState(EBearState.Patrol);
     }
 
     public void Execute(Bear bear)

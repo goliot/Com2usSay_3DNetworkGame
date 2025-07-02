@@ -3,10 +3,10 @@ using UnityEngine;
 
 // 아이템 공장 : 아이템 생성 담당
 [RequireComponent(typeof(PhotonView))]
-public class ItemObjectFactory : MonoBehaviourPunCallbacks
+public class ObjectFactory : MonoBehaviourPunCallbacks
 {
-    private static ItemObjectFactory _instance;
-    public static ItemObjectFactory Instance => _instance;
+    private static ObjectFactory _instance;
+    public static ObjectFactory Instance => _instance;
 
     private PhotonView _photonView;
 
@@ -16,15 +16,15 @@ public class ItemObjectFactory : MonoBehaviourPunCallbacks
         _photonView = GetComponent<PhotonView>();
     }
 
-    public void RequestCreate(EItemType itemType, Vector3 position)
+    public void RequestCreate(string name, Vector3 position)
     {
         if(PhotonNetwork.IsMasterClient)
         {
-            Create(itemType, position);
+            Create(name, position);
         }
         else
         {
-            _photonView.RPC(nameof(Create), RpcTarget.MasterClient, itemType, position);
+            _photonView.RPC(nameof(Create), RpcTarget.MasterClient, name, position);
         }
     }
 
@@ -40,10 +40,22 @@ public class ItemObjectFactory : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    private void Create(EItemType itemType, Vector3 position)
+    public void RequestDelete(GameObject toDelete)
     {
-        PhotonNetwork.InstantiateRoomObject($"{itemType}Item", position, Quaternion.identity);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Delete(toDelete);
+        }
+        else
+        {
+            _photonView.RPC(nameof(Delete), RpcTarget.MasterClient, toDelete);
+        }
+    }
+
+    [PunRPC]
+    private void Create(string name, Vector3 position)
+    {
+        PhotonNetwork.InstantiateRoomObject(name, position, Quaternion.identity);
     }
 
     [PunRPC]
@@ -58,5 +70,11 @@ public class ItemObjectFactory : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.Destroy(objectToDelete);
         }
+    }
+
+    [PunRPC]
+    private void Delete(GameObject toDelete)
+    {
+        PhotonNetwork.Destroy(toDelete);
     }
 }

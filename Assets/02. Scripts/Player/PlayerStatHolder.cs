@@ -253,7 +253,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
             //PhotonNetwork.InstantiateRoomObject(_dropItems[idx].name, transform.position + new Vector3(0, 2, 0), Quaternion.identity);
 
             //PhotonNetwork.InstantiateRoomObject("ScoreItem", transform.position + new Vector3(0, 2, 0), Quaternion.identity);
-            ItemObjectFactory.Instance.RequestCreate(_dropItems[idx], transform.position + new Vector3(0, 2, 0));
+            ObjectFactory.Instance.RequestCreate($"{_dropItems[idx]}Item", transform.position + new Vector3(0, 2, 0));
         }
     }
 }
