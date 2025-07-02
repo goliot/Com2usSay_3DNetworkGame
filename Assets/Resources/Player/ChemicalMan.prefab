@@ -1516,7 +1516,7 @@ GameObject:
   - component: {fileID: 2595614497054181045}
   m_Layer: 3
   m_Name: ChemicalMan
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1638,6 +1638,7 @@ MonoBehaviour:
   BaseJumpStaminaCost: 10
   BaseSprintStaminaCost: 10
   BaseAttackStaminaCost: 10
+  Score: 0
   _staminaSlider: {fileID: 3727284754127663278, guid: ed26a2c9c14fb2a44a6997c1224d7423, type: 3}
   _hpSlider: {fileID: 3727284754127663278, guid: 1ff0388390fbf0140bbd1842f8bf645d, type: 3}
   _root: {fileID: 2973789436188576878}

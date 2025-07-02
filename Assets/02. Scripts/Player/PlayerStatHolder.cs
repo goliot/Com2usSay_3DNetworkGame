@@ -25,6 +25,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public float BaseAttackStaminaCost = 10f;
 
     [Header("# Status")]
+    public int Score = 0;
     public float CurrentHealth { get; private set; }
     public float CurrentStamina { get; private set; }
     public bool IsDead { get; private set; }
@@ -213,6 +214,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         if (_photonView.IsMine)
         {
             PhotonServerManager.Instance.Respawn();
+            DropItems(UnityEngine.Random.Range(1, 4));
             PhotonNetwork.Destroy(gameObject);
         }
     }
@@ -229,5 +231,13 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         Quaternion rotation = Quaternion.LookRotation(dir);
 
         Instantiate(Resources.Load<GameObject>("HitEffect"), position, rotation);
+    }
+
+    private void DropItems(int count)
+    {
+        for(int i=0; i<count; ++i)
+        {
+            PhotonNetwork.Instantiate("ScoreItem", transform.position + new Vector3(0, 2, 0), Quaternion.identity);
+        }
     }
 }
