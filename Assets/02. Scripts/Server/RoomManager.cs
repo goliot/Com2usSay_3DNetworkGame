@@ -3,6 +3,7 @@ using Photon.Realtime;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -29,12 +30,66 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
+    private void SpawnBears()
+    {
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            return;   
+        }
+
+        foreach (var point in _spawnPoints)
+        {
+            float value = UnityEngine.Random.value;
+            if (value < 0.5f)
+            {
+                PhotonNetwork.Instantiate("Bear", point.position, Quaternion.identity);
+            }
+        }
+    }
+
+    private void SpawnItems()
+    {
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
+        StartCoroutine(CoSpawnItems());
+    }
+
+    private IEnumerator CoSpawnItems()
+    {
+        WaitForSeconds wait = new WaitForSeconds(5f);
+
+        while (true)
+        {
+            yield return wait;
+
+            // 아이템 타입 랜덤 선택
+            int random = UnityEngine.Random.Range(0, (int)EItemType.Count);
+            EItemType randomItem = (EItemType)random;
+
+            // 스폰 지점 랜덤 선택
+            int spawnIndex = UnityEngine.Random.Range(0, _spawnPoints.Length);
+            Vector3 spawnPosition = _spawnPoints[spawnIndex].position;
+
+            // 아이템 이름 예: "HpItem", "ScoreItem" 등
+            string itemName = $"{randomItem}Item";
+
+            // 아이템 생성 요청
+            ObjectFactory.Instance.RequestCreate(itemName, spawnPosition);
+        }
+    }
+
     public override void OnJoinedRoom()
     {
         SetRoom();
         GeneratePlayer();
 
         OnRoomDataChanged?.Invoke();
+
+        SpawnBears();
+        SpawnItems();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -52,7 +107,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void OnPlayerDeath(int deadActorNumber, int attackerActorNumber)
     {
         string deadNickname = $"{_room.Players[deadActorNumber].NickName}_{deadActorNumber}";
-        string attackerNickname = $"{_room.Players[attackerActorNumber].NickName}_{attackerActorNumber}";
+
+        string attackerNickname = attackerActorNumber == default ? "시스템" : $"{_room.Players[attackerActorNumber].NickName}_{attackerActorNumber}";
         OnPlayerDead?.Invoke(deadNickname, attackerNickname);
     }
 

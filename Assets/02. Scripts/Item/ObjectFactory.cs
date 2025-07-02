@@ -75,6 +75,9 @@ public class ObjectFactory : MonoBehaviourPunCallbacks
     [PunRPC]
     private void Delete(GameObject toDelete)
     {
-        PhotonNetwork.Destroy(toDelete);
+        if(toDelete != null)
+        {
+            PhotonNetwork.Destroy(toDelete);
+        }
     }
 }

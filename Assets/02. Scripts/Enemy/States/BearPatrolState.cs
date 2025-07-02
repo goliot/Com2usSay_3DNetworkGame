@@ -10,7 +10,7 @@ public class BearPatrolState : IBearState
         SelectNextPoint(bear);
         bear.NavAgent.speed = bear.MoveSpeed;
         bear.NavAgent.isStopped = false;
-        bear.Anim.SetBool("IsWalking", true); // 애니메이션 파라미터에 따라 수정
+        bear.Anim.SetBool("IsMoving", true);
     }
 
     public void Execute(Bear bear)
@@ -33,6 +33,7 @@ public class BearPatrolState : IBearState
     public void Exit(Bear bear)
     {
         bear.NavAgent.isStopped = true;
+        bear.Anim.SetBool("IsMoving", false);
     }
 
     private void SelectNextPoint(Bear bear)

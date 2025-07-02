@@ -7,6 +7,7 @@ TagManager:
   - FollowCamera
   - HUDCanvas
   - DeadZone
+  - PatrolPoint
   layers:
   - Default
   - TransparentFX

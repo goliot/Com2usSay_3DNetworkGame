@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 [RequireComponent(typeof(PhotonView))]
 public class Bear : MonoBehaviour, IDamageable
@@ -15,6 +16,8 @@ public class Bear : MonoBehaviour, IDamageable
     public float MoveSpeed = 3f;
     public float Damage = 20f;
     public float DetectRange = 5f;
+    public float AttackRange = 1f;
+    public float AttackCoolTime = 1f;
 
     [Header("# Status")]
     public bool IsDead => _stateMachine.CurrentState is BearDeadState;
@@ -31,19 +34,19 @@ public class Bear : MonoBehaviour, IDamageable
     public Animator Anim => _anim;
     private NavMeshAgent _navAgent;
     public NavMeshAgent NavAgent => _navAgent;
-    [SerializeField] private Collider _attackCollider;
-    public Collider AttackCollider => _attackCollider;
-
 
     private void Awake()
     {
+        _navAgent = GetComponent<NavMeshAgent>();
         _photonView = GetComponent<PhotonView>();
         _anim = GetComponent<Animator>();
+        _patrolPoints = GameObject.FindGameObjectsWithTag("PatrolPoint")
+            .Select(go => go.transform)
+            .ToArray();
         CurrentHealth = MaxHp;
 
         _stateMachine = new BearStateMachine(this, new Dictionary<EBearState, IBearState>
             {
-                { EBearState.Idle, new BearIdleState() },
                 { EBearState.Attack, new BearAttackState() },
                 { EBearState.Dead, new BearDeadState() },
                 { EBearState.Patrol, new BearPatrolState() },
@@ -98,15 +101,6 @@ public class Bear : MonoBehaviour, IDamageable
         _stateMachine.ChangeState(state);
     }
 
-    public void TakeDamage(float damage)
-    {
-        CurrentHealth -= damage;
-        if (CurrentHealth <= 0)
-        {
-            ChangeState(EBearState.Dead);
-        }
-    }
-
     [PunRPC]
     public void TakeDamage(float damage, string attackerNickname, int actorNumber = default)
     {
@@ -120,6 +114,7 @@ public class Bear : MonoBehaviour, IDamageable
 
         if (CurrentHealth <= 0f)
         {
+            ChangeState(EBearState.Dead);
             CurrentHealth = 0f;
             _photonView.RPC(nameof(Die), RpcTarget.All);
         }
@@ -140,14 +135,32 @@ public class Bear : MonoBehaviour, IDamageable
     {
         yield return new WaitForSeconds(5f);
 
-        if (_photonView.IsMine)
-        {
-            PhotonNetwork.Destroy(gameObject);
-        }
+        ObjectFactory.Instance.RequestDelete(gameObject);
     }
 
     public void TakeFallDeath()
     {
         _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, _photonView.ViewID);
+    }
+
+    [PunRPC]
+    public void SetAttackAnim()
+    {
+        _anim.SetTrigger("DoAttack");
+    }
+
+    [PunRPC]
+    public void SetDieAnim()
+    {
+        _anim.SetTrigger("DoDie");
+    }
+
+    [PunRPC]
+    public void SpawnHitEffect(Vector3 position)
+    {
+        Vector3 dir = (position - transform.position).normalized;
+        Quaternion rotation = Quaternion.LookRotation(dir);
+
+        Instantiate(Resources.Load<GameObject>("HitEffect"), position, rotation);
     }
 }

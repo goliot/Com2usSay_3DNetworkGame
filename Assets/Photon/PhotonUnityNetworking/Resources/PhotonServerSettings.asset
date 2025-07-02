@@ -47,6 +47,10 @@ MonoBehaviour:
   - SpawnHitEffect
   - Create
   - Delete
+  - SetAttackAnim
+  - SetMoveAnim
+  - SetRunAnim
+  - SetDieAnim
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

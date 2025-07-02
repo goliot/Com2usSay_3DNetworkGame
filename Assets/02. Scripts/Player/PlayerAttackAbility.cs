@@ -89,7 +89,7 @@ public class PlayerAttackAbility : PlayerAbility
 
         Damage damage = _player.MakeDamage();
         PhotonView otherPhotonView = other.GetComponent<PhotonView>();
-        otherPhotonView.RPC(nameof(PlayerStatHolder.TakeDamage), RpcTarget.AllBuffered, damage.Value, PhotonNetwork.NickName, _photonView.Owner.ActorNumber);
-        otherPhotonView.RPC(nameof(PlayerStatHolder.SpawnHitEffect), RpcTarget.All, other.ClosestPoint(transform.position));
+        otherPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage.Value, PhotonNetwork.NickName, _photonView.Owner.ActorNumber);
+        otherPhotonView.RPC("SpawnHitEffect", RpcTarget.All, other.ClosestPoint(transform.position));
     }
 }

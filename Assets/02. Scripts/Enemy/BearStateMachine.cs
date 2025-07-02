@@ -13,8 +13,7 @@ public class BearStateMachine
     {
         _bear = bear;
         StateDictionary = stateDictionary;
-        _currentState = StateDictionary[EBearState.Idle];
-        ChangeState(EBearState.Idle);
+        ChangeState(EBearState.Patrol);
     }
 
     public void ChangeState(EBearState newState)
