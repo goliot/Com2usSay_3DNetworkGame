@@ -5,6 +5,7 @@ using Photon.Pun;
 using System.Collections;
 using Unity.Cinemachine;
 using DG.Tweening;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class PlayerStatHolder : MonoBehaviour, IDamageable
 {
@@ -23,6 +24,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public float BaseJumpStaminaCost = 10f;
     public float BaseSprintStaminaCost = 10f;
     public float BaseAttackStaminaCost = 10f;
+    [SerializeField] private List<EItemType> _dropItems;
 
     [Header("# Status")]
     public int Score = 0;
@@ -159,6 +161,16 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         }
     }
 
+    public void RecoverStamina(float value)
+    {
+        CurrentStamina = Mathf.Clamp(CurrentStamina + value, 0, GetStat(EStatType.MaxStamina));
+    }
+
+    public void RecoverHealth(float value)
+    {
+        CurrentHealth = Mathf.Clamp(CurrentHealth + value, 0, GetStat(EStatType.MaxHealth));
+    }
+
     [PunRPC]
     public void TakeDamage(float damage, string attackerNickname, int actorNumber = default)
     {
@@ -237,7 +249,11 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     {
         for(int i=0; i<count; ++i)
         {
-            PhotonNetwork.Instantiate("ScoreItem", transform.position + new Vector3(0, 2, 0), Quaternion.identity);
+            int idx = UnityEngine.Random.Range(0, _dropItems.Count);
+            //PhotonNetwork.InstantiateRoomObject(_dropItems[idx].name, transform.position + new Vector3(0, 2, 0), Quaternion.identity);
+
+            //PhotonNetwork.InstantiateRoomObject("ScoreItem", transform.position + new Vector3(0, 2, 0), Quaternion.identity);
+            ItemObjectFactory.Instance.RequestCreate(_dropItems[idx], transform.position + new Vector3(0, 2, 0));
         }
     }
 }

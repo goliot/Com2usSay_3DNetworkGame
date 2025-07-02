@@ -1638,6 +1638,7 @@ MonoBehaviour:
   BaseJumpStaminaCost: 10
   BaseSprintStaminaCost: 10
   BaseAttackStaminaCost: 10
+  _dropItems: 000000000100000002000000
   Score: 0
   _staminaSlider: {fileID: 3727284754127663278, guid: ed26a2c9c14fb2a44a6997c1224d7423, type: 3}
   _hpSlider: {fileID: 3727284754127663278, guid: 1ff0388390fbf0140bbd1842f8bf645d, type: 3}
