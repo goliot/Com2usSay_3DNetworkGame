@@ -20,7 +20,6 @@ public class BearStateMachine
     {
         if (StateDictionary.TryGetValue(newState, out IBearState state))
         {
-            Debug.Log($"{CurrentState} => {newState}");
             if (_currentState != null && _currentState != state)
             {
                 _currentState.Exit(_bear);

@@ -85,7 +85,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         SetRoom();
         GeneratePlayer();
-
         OnRoomDataChanged?.Invoke();
 
         SpawnBears();

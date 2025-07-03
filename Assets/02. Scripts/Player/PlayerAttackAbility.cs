@@ -71,13 +71,11 @@ public class PlayerAttackAbility : PlayerAbility
     public void ActiveCollider()
     {
         _weaponCollider.enabled = true;
-        Debug.Log("콜라이더 On");
     }
 
     public void DeactiveCollider()
     {
         _weaponCollider.enabled = false;
-        Debug.Log("콜라이더 Off");
     }
 
     public void HitEnemy(Collider other)
