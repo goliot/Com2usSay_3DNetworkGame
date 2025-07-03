@@ -108,6 +108,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
         string deadNickname = $"{_room.Players[deadActorNumber].NickName}_{deadActorNumber}";
 
         string attackerNickname = attackerActorNumber == default ? "시스템" : $"{_room.Players[attackerActorNumber].NickName}_{attackerActorNumber}";
+
+        if(attackerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+        {
+            ScoreManager.Instance.AddKill();
+        }
         OnPlayerDead?.Invoke(deadNickname, attackerNickname);
     }
 

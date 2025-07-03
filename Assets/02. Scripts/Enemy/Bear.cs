@@ -140,7 +140,7 @@ public class Bear : MonoBehaviour, IDamageable
 
     public void TakeFallDeath()
     {
-        _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, _photonView.ViewID);
+        _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, default);
     }
 
     [PunRPC]

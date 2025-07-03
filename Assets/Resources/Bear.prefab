@@ -288,7 +288,7 @@ MonoBehaviour:
   Damage: 20
   DetectRange: 10
   AttackRange: 2
-  AttackCoolTime: 1
+  AttackCoolTime: 2
   _patrolPoints: []
 --- !u!114 &6052230894995953521
 MonoBehaviour:

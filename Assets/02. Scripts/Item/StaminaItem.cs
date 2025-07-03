@@ -1,3 +1,5 @@
+using Photon.Pun;
+
 public class StaminaItem : ItemObject
 {
     protected override void UseItem(PlayerStatHolder playerStatHolder)

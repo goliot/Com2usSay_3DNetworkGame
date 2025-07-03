@@ -14,6 +14,9 @@ public class ScoreManager : MonoBehaviourPunCallbacks
 
     private int _score = 0;
     public int Score => _score;
+    private int _killCount = 0;
+    public int KillCount => _killCount;
+    public int FinalScore => _killCount * 5000 + _score;
 
     public Dictionary<string, int> _scores = new Dictionary<string, int>();
     public List<KeyValuePair<string, int>> Scores => _scores.ToList().OrderByDescending(a => a.Value).ToList();
@@ -28,7 +31,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         UploadScoreToServer();
 
         string myKey = $"{PhotonNetwork.LocalPlayer.NickName}_{PhotonNetwork.LocalPlayer.ActorNumber}";
-        _scores[myKey] = _score;
+        _scores[myKey] = FinalScore;
 
         // ✅ 기존 플레이어들의 점수 수동 동기화
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -46,7 +49,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks
     public void UploadScoreToServer()
     {
         Hashtable _hashTable = new Hashtable();
-        _hashTable.Add("Score", _score);
+        _hashTable.Add("Score", FinalScore);
         PhotonNetwork.LocalPlayer.SetCustomProperties(_hashTable);
         OnDataChanged?.Invoke();
     }
@@ -67,5 +70,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks
 
             OnDataChanged?.Invoke(); // UI 갱신
         }
+    }
+
+    public void AddKill()
+    {
+        _killCount++;
+        UploadScoreToServer();
     }
 }

@@ -51,6 +51,8 @@ MonoBehaviour:
   - SetMoveAnim
   - SetRunAnim
   - SetDieAnim
+  - RPC_RecoverHealth
+  - RPC_RecoverStamina
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

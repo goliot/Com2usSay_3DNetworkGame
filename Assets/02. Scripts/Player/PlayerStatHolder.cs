@@ -164,11 +164,31 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
 
     public void RecoverStamina(float value)
     {
+        if (_photonView.IsMine)
+        {
+            _photonView.RPC(nameof(RPC_RecoverStamina), RpcTarget.All, value);
+        }
+        CurrentStamina = Mathf.Clamp(CurrentStamina + value, 0, GetStat(EStatType.MaxStamina));
+        PlayerStaminaEvent?.Invoke(CurrentStamina, GetStat(EStatType.MaxStamina));
+    }
+
+    [PunRPC]
+    private void RPC_RecoverStamina(float value)
+    {
         CurrentStamina = Mathf.Clamp(CurrentStamina + value, 0, GetStat(EStatType.MaxStamina));
         PlayerStaminaEvent?.Invoke(CurrentStamina, GetStat(EStatType.MaxStamina));
     }
 
     public void RecoverHealth(float value)
+    {
+        if (_photonView.IsMine)
+        {
+            _photonView.RPC(nameof(RPC_RecoverHealth), RpcTarget.All, value);
+        }
+    }
+
+    [PunRPC]
+    private void RPC_RecoverHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + value, 0, GetStat(EStatType.MaxHealth));
         PlayerHpEvent?.Invoke(CurrentHealth, GetStat(EStatType.MaxHealth));
@@ -236,7 +256,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
 
     public void TakeFallDeath()
     {
-        _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, _photonView.ViewID);
+        _photonView.RPC(nameof(TakeDamage), RpcTarget.AllBuffered, float.MaxValue, PhotonNetwork.NickName, default);
     }
 
     [PunRPC]
