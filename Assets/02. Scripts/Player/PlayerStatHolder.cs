@@ -43,6 +43,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     [SerializeField] private GameObject _root;
     private Dictionary<Type, PlayerAbility> _abilitiesCache = new Dictionary<Type, PlayerAbility>();
     private PhotonView _photonView;
+    public PhotonView PhotonView => _photonView;
     private Animator _anim;
     private CinemachineImpulseSource _source;
 
