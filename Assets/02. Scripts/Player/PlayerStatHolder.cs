@@ -164,11 +164,13 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
     public void RecoverStamina(float value)
     {
         CurrentStamina = Mathf.Clamp(CurrentStamina + value, 0, GetStat(EStatType.MaxStamina));
+        PlayerStaminaEvent?.Invoke(CurrentStamina, GetStat(EStatType.MaxStamina));
     }
 
     public void RecoverHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + value, 0, GetStat(EStatType.MaxHealth));
+        PlayerHpEvent?.Invoke(CurrentHealth, GetStat(EStatType.MaxHealth));
     }
 
     [PunRPC]
