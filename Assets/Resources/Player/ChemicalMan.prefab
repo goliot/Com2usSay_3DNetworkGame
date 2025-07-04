@@ -487,6 +487,7 @@ GameObject:
   - component: {fileID: 2996991686343552664}
   - component: {fileID: 1419710195140303686}
   - component: {fileID: 1821734551848850566}
+  - component: {fileID: 9038875215727877613}
   m_Layer: 0
   m_Name: KnifeDefault
   m_TagString: Untagged
@@ -595,6 +596,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 894c56d4884fe5948940df3cb63b6ff5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9038875215727877613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996991686345551960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 0
+  m_SynchronizeRotation: 0
+  m_SynchronizeScale: 1
+  m_UseLocal: 1
 --- !u!1 &3043748094674222550
 GameObject:
   m_ObjectHideFlags: 0
@@ -1612,6 +1629,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 6014091670021634585}
   - {fileID: 5221658580372726057}
+  - {fileID: 9038875215727877613}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
