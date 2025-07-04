@@ -13,6 +13,8 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
 
     //[SerializeField] private Transform[] SpawnPoints;    
 
+    public string MyCharacter { get; private set; } = "ChemicalMan";
+
     private void Awake()
     {
         if (Instance == null)
@@ -112,5 +114,10 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log($"룸 생성 실패 : {returnCode} : {message}");
+    }
+
+    public void SetCharacter(string name)
+    {
+        MyCharacter = name;
     }
 }

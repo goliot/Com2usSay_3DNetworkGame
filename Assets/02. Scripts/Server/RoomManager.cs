@@ -144,11 +144,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void GeneratePlayer()
     {
-        PhotonNetwork.Instantiate("Player/ChemicalMan", _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)].position, Quaternion.identity);
+        PhotonNetwork.Instantiate($"Player/{PhotonServerManager.Instance.MyCharacter}", _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)].position, Quaternion.identity);
     }
 
     public void Respawn()
     {
-        PhotonNetwork.Instantiate("Player/ChemicalMan", _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)].position, Quaternion.identity);
+        PhotonNetwork.Instantiate($"Player/{PhotonServerManager.Instance.MyCharacter}", _spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Length)].position, Quaternion.identity);
     }
 }

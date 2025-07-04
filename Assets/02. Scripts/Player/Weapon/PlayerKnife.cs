@@ -5,10 +5,13 @@ public class PlayerKnife : MonoBehaviour
 {
     private PlayerAttackAbility _attackAbility;
 
-    private void Start()
+    private void Awake()
     {
         _attackAbility = GetComponentInParent<PlayerAttackAbility>();
+    }
 
+    private void Start()
+    {
         ScoreManager.Instance.OnDataChanged += MakeBigger;
     }
 
