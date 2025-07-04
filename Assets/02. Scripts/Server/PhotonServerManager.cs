@@ -9,18 +9,21 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     public static PhotonServerManager Instance { get; private set; }
 
     private readonly string _gameVersion = "1.0.0";
-    private readonly string _nickname = $"goliot";
+    //private readonly string _nickname = $"goliot";
 
     //[SerializeField] private Transform[] SpawnPoints;    
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Instance == null)
         {
-            Destroy(gameObject); // 중복 방지
-            return;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-        Instance = this;
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // 0. 데이터 송 수신 빈도 매 초당 30회로 설정 (기본 = 10)
         PhotonNetwork.SendRate = 60; // TargetRate일 뿐 보장은 아님
@@ -29,7 +32,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         // 1. 버전 : 버전이 다르면 다른 서버로 접속이 된다. -> 패치 한 유저와 안한 유저가 다른 서버에서 놀게 할 때
         PhotonNetwork.GameVersion = _gameVersion;
         // 2. 닉네임 : 게임에서 사용할 사용자의 별명(중복 가능 -> 판별을 위해서는 ActorID)
-        PhotonNetwork.NickName = _nickname;
+        //PhotonNetwork.NickName = _nickname;
 
         // 방장이 로드한 씬으로 다른 참여자가 똑같이 이동하게끔 동기화하는 옵션
         // 방장 : 방을 만든 소유자, "마스터 클라이언트" (방 마다 한 명의 마스터 클라이언트가 존재)
@@ -59,7 +62,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Debug.Log($"로비 접속 {PhotonNetwork.InLobby}");
 
         // 랜덤 방에 들어간다.
-        PhotonNetwork.JoinRandomRoom();
+        //PhotonNetwork.JoinRandomRoom();
 
         // 랜덤 방에 들어가거나 없으면 생성해서 들어간다.
         //PhotonNetwork.JoinRandomOrCreateRoom();
@@ -70,7 +73,12 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
         Debug.Log($"방 입장 완료 {PhotonNetwork.InRoom} : {PhotonNetwork.CurrentRoom.Name}");
         Debug.Log($"플레이어 : {PhotonNetwork.CurrentRoom.PlayerCount} 명");
 
-        //룸에 접속한 사용자 정보
+        if(PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel("BattleScene");
+        }
+
+        /*//룸에 접속한 사용자 정보
         Dictionary<int, Player> roomPlayers = PhotonNetwork.CurrentRoom.Players;
 
         foreach(var pair in roomPlayers)
@@ -80,7 +88,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
 
             // 진짜 고유 ID
             Debug.Log(pair.Value.UserId); // 친구 기능, 귓속말 등에 쓰임
-        }
+        }*/
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)

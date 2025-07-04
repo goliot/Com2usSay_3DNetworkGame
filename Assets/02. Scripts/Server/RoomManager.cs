@@ -30,6 +30,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
+    public void Start()
+    {
+        SetRoom();
+        GeneratePlayer();
+        OnRoomDataChanged?.Invoke();
+
+        SpawnBears();
+        SpawnItems();
+    }
+
     private void SpawnBears()
     {
         if(!PhotonNetwork.IsMasterClient)
@@ -79,16 +89,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
             // 아이템 생성 요청
             ObjectFactory.Instance.RequestCreate(itemName, spawnPosition);
         }
-    }
-
-    public override void OnJoinedRoom()
-    {
-        SetRoom();
-        GeneratePlayer();
-        OnRoomDataChanged?.Invoke();
-
-        SpawnBears();
-        SpawnItems();
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)

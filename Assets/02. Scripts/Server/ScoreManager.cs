@@ -26,7 +26,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         Instance = this;
     }
 
-    public override void OnJoinedRoom()
+    public void Start()
     {
         UploadScoreToServer();
 
