@@ -111,8 +111,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
         if(attackerActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
-            ScoreManager.Instance.AddKill();
+            ScoreManager.Instance.AddKillCount();
         }
+
         OnPlayerDead?.Invoke(deadNickname, attackerNickname);
     }
 

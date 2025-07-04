@@ -53,6 +53,7 @@ MonoBehaviour:
   - SetDieAnim
   - RPC_RecoverHealth
   - RPC_RecoverStamina
+  - TakeScore
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

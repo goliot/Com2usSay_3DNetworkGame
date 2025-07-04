@@ -72,7 +72,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void AddKill()
+    public void AddKillCount()
     {
         _killCount++;
         UploadScoreToServer();

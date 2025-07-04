@@ -41,5 +41,4 @@ public class PlayerKnife : MonoBehaviour
         int score = ScoreManager.Instance.FinalScore;
         transform.localScale *= 1 + (score / 10000f) * 0.1f;
     }
-
 }

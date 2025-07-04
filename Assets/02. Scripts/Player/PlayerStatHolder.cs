@@ -226,8 +226,20 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         {
             CurrentHealth = 0f;
             RoomManager.Instance.OnPlayerDeath(_photonView.Owner.ActorNumber, actorNumber);
+            if(actorNumber != default && _photonView.IsMine)
+            {
+                var target = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+                _photonView.RPC(nameof(TakeScore), target, ScoreManager.Instance.FinalScore / 2);
+                ScoreManager.Instance.AddScore(-(ScoreManager.Instance.Score / 2));
+            }
             _photonView.RPC(nameof(Die), RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    public void TakeScore(int value)
+    {
+        ScoreManager.Instance.AddScore(value);
     }
 
     [PunRPC]
