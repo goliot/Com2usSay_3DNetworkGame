@@ -70,8 +70,11 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
         CurrentHealth = GetStat(EStatType.MaxHealth);
         CurrentStamina = GetStat(EStatType.MaxStamina);
         IsDead = false;
+    }
 
-        if(_photonView.IsMine)
+    private void Start()
+    {
+        if (_photonView.IsMine)
         {
             //GameObject staminaSlider = Instantiate(_staminaSlider, GameObject.FindGameObjectWithTag("HUDCanvas").transform);
             //GameObject hpSlider = Instantiate(_hpSlider, GameObject.FindGameObjectWithTag("HUDCanvas").transform);

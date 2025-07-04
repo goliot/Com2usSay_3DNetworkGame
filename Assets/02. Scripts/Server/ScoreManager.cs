@@ -24,10 +24,7 @@ public class ScoreManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
-    }
 
-    public void Start()
-    {
         UploadScoreToServer();
 
         string myKey = $"{PhotonNetwork.LocalPlayer.NickName}_{PhotonNetwork.LocalPlayer.ActorNumber}";
@@ -44,6 +41,11 @@ public class ScoreManager : MonoBehaviourPunCallbacks
         }
 
         OnDataChanged?.Invoke(); // UI 갱신
+    }
+
+    private void Start()
+    {
+        
     }
 
     public void UploadScoreToServer()

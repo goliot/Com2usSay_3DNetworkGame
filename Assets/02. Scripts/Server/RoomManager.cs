@@ -20,6 +20,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private Room _room;
     public Room Room => _room;
 
+    private bool _isInitialized = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -27,17 +29,34 @@ public class RoomManager : MonoBehaviourPunCallbacks
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        Instance = this;    
     }
 
-    public void Start()
+    private void Start()
     {
+        Init();
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        if(_isInitialized || !PhotonNetwork.InRoom)
+        {
+            return;
+        }
+
         SetRoom();
         GeneratePlayer();
         OnRoomDataChanged?.Invoke();
 
         SpawnBears();
         SpawnItems();
+
+        _isInitialized = true;
     }
 
     private void SpawnBears()

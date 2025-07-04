@@ -28,6 +28,6 @@ public class LobbyScene : MonoBehaviour
         roomOptions.IsVisible = true; // 룸 목록에 노출시킬지 여부
 
         // 생성 -> 접속까지
-        PhotonNetwork.CreateRoom(roomId, roomOptions);
+        PhotonNetwork.JoinOrCreateRoom(roomId, roomOptions, TypedLobby.Default);
     }
 }
