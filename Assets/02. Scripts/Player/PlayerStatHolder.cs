@@ -260,7 +260,7 @@ public class PlayerStatHolder : MonoBehaviour, IDamageable
 
         if (_photonView.IsMine)
         {
-            PhotonServerManager.Instance.Respawn();
+            RoomManager.Instance.Respawn();
             DropItems(UnityEngine.Random.Range(1, 4));
             PhotonNetwork.Destroy(gameObject);
         }

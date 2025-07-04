@@ -11,7 +11,7 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     private readonly string _gameVersion = "1.0.0";
     private readonly string _nickname = $"goliot";
 
-    [SerializeField] private Transform[] SpawnPoints;    
+    //[SerializeField] private Transform[] SpawnPoints;    
 
     private void Awake()
     {
@@ -104,10 +104,5 @@ public class PhotonServerManager : MonoBehaviourPunCallbacks
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         Debug.Log($"룸 생성 실패 : {returnCode} : {message}");
-    }
-
-    public void Respawn()
-    {
-        PhotonNetwork.Instantiate("Player/ChemicalMan", SpawnPoints[Random.Range(0, SpawnPoints.Length)].position, Quaternion.identity);
     }
 }
